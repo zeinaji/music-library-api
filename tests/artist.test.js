@@ -92,8 +92,10 @@ describe('/Artist', () => {
     });
   });
 
-  after(() => {
+  after((done) => {
     const db = mongoose.connection;
-    db.dropDatabase();
+    db.dropDatabase(() => {
+      done();
+    });
   });
 });

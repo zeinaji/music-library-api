@@ -23,27 +23,26 @@ describe('Album', () => {
               year: 2010,
             }).end((postAlbumError, postAlbumResponse) => {
               expect(postAlbumResponse.status).to.equal(200);
+              const artist = postAlbumResponse.body.artist;
+              expect(artist).to.deep.equal({
+                _id: artistId,
+                name: 'Tame Impala',
+                genre: 'Rock',
+                __v: 0,
+              });
+              expect(postAlbumResponse.body.name).to.equal('InnerSpeaker');
+              expect(postAlbumResponse.body.year).to.equal(2010);
+              expect();
               done();
             });
         });
     });
-
-    it('gets artist record by id', (done) => {
-      chai.request(server)
-        .get(`/Artist/${artistId}`)
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          expect(res.body).to.have.all.keys('name', 'genre', '_id', '__v');
-          expect(res.body.name).to.equal('Tame Impala');
-          expect(res.body.genre).to.equal('Rock');
-          done();
-        });
-    });
   });
 
-  after(() => {
+  after((done) => {
     const db = mongoose.connection;
-    db.dropDatabase();
+    db.dropDatabase(() => {
+      done();
+    });
   });
 });
