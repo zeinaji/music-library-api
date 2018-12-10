@@ -4,6 +4,7 @@
   "description": "Music Library API integration test suite",
   "private": true,
   "scripts": {
+    "start": "nodemon -r dotenv/config index.js",
     "test": "mocha tests/**/*.test.js --opts .mocha.opts"
   },
   "repository": {
@@ -18,7 +19,6 @@
   ],
   "author": "Manchester Codes",
   "dependencies": {
-    "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "mongoose": "^5.0.14"

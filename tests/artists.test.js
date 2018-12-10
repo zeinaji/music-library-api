@@ -1,99 +1,147 @@
 const mongoose = require('mongoose');
+const Artist = require('../src/models/artist');
 
-describe('/Artist', () => {
-  let artistId;
+describe('/artists', () => {
+  afterEach((done) => {
+    mongoose.connection.dropDatabase(() => {
+      done();
+    });
+  });
 
-  describe('POST /artist', () => {
-    it('creates a new artist record', (done) => {
+  describe('POST /artists', () => {
+    xit('creates a new artist in the database', (done) => {
       chai.request(server)
-        .post('/Artist')
+        .post('/artists')
         .send({
           name: 'Tame Impala',
           genre: 'Rock',
         })
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          expect(res.body).to.have.all.keys('name', 'genre', '_id', '__v');
-          expect(res.body.name).to.equal('Tame Impala');
-          expect(res.body.genre).to.equal('Rock');
-          done();
+        .end((error, res) => {
+          expect(error).to.equal(null);
+          expect(res.status).to.equal(201);
+
+          Artist.findById(res.body._id, (err, artist) => {
+            expect(err).to.equal(null);
+            expect(artist.name).to.equal('Tame Impala');
+            expect(artist.genre).to.equal('Rock');
+            done();
+          });
         });
     });
   });
 
-  describe('GET /artist', () => {
-    it('gets created artist record', (done) => {
-      chai.request(server)
-        .get('/Artist')
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          const results = res.body;
-          expect(results).to.have.lengthOf(1);
-          const artist = results[0];
-          expect(artist).to.have.all.keys('name', 'genre', '_id', '__v');
-          expect(artist.name).to.equal('Tame Impala');
-          expect(artist.genre).to.equal('Rock');
-          artistId = artist._id;
-          done();
-        });
+  describe('with artists in the database', () => {
+    let artists;
+    beforeEach((done) => {
+      Promise.all([
+        Artist.create({ name: 'Tame Impala', genre: 'Rock' }),
+        Artist.create({ name: 'Kylie Minogue', genre: 'Pop' }),
+        Artist.create({ name: 'Dave Brubeck', genre: 'Jazz' }),
+      ]).then((documents) => {
+        artists = documents;
+        done();
+      });
     });
-  });
 
-  describe('GET /artist/:artistId', () => {
-    it('gets artist record by id', (done) => {
-      chai.request(server)
-        .get(`/Artist/${artistId}`)
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          expect(res.body).to.have.all.keys('name', 'genre', '_id', '__v');
-          expect(res.body.name).to.equal('Tame Impala');
-          expect(res.body.genre).to.equal('Rock');
-          done();
-        });
+    describe('GET /artists', () => {
+      xit('gets all artist records', (done) => {
+        chai.request(server)
+          .get('/artists')
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.lengthOf(3);
+
+            res.body.forEach((artist) => {
+              const expected = artists.find(a => a._id.toString() === artist._id);
+              expect(artist.name).to.equal(expected.name);
+              expect(artist.genre).to.equal(expected.genre);
+            });
+            done();
+          });
+      });
     });
-  });
 
-  describe('PUT /artist/:artistId', () => {
-    it('updates artist record by id', (done) => {
-      chai.request(server)
-        .put(`/Artist/${artistId}`)
-        .send({ genre: 'Psychedelic Rock' })
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          expect(res.body).to.have.all.keys('genre', '_id', '__v');
-          expect(res.body.genre).to.equal('Psychedelic Rock');
-          expect(res.body._id).to.equal(artistId);
-          done();
-        });
+    describe('GET /artist/:artistId', () => {
+      xit('gets artist record by id', (done) => {
+        const artist = artists[0];
+        chai.request(server)
+          .get(`/artists/${artist._id}`)
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+            expect(res.body.name).to.equal(artist.name);
+            expect(res.body.genre).to.equal(artist.genre);
+            done();
+          });
+      });
+
+      xit('returns a 404 if the artist does not exist', (done) => {
+        chai.request(server)
+          .get('/artists/12345')
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The artist could not be found.');
+            done();
+          });
+      });
     });
-  });
 
-  describe('Delete /artist/:artistId', () => {
-    it('deletes artist record by id', (done) => {
-      chai.request(server)
-        .delete(`/Artist/${artistId}`)
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res.status).to.equal(200);
-          chai.request(server)
-            .get('/Artist')
-            .end((errorGetArtist, responseGetArtist) => {
-              expect(errorGetArtist).to.equal(null);
-              expect(responseGetArtist.status).to.equal(200);
-              const results = responseGetArtist.body;
-              expect(results).to.have.lengthOf(0);
+    describe('PATCH /artists/:artistId', () => {
+      xit('updates artist record by id', (done) => {
+        const artist = artists[0];
+        chai.request(server)
+          .patch(`/artists/${artist._id}`)
+          .send({ genre: 'Psychedelic Rock' })
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(200);
+            Artist.findById(artist._id, (err, updatedArtist) => {
+              expect(updatedArtist.genre).to.equal('Psychedelic Rock');
               done();
             });
-        });
-    });
-  });
+          });
+      });
 
-  after(() => {
-    const db = mongoose.connection;
-    db.dropDatabase();
+      xit('returns a 404 if the artist does not exist', (done) => {
+        chai.request(server)
+          .patch('/artists/12345')
+          .send({ genre: 'Psychedelic Rock' })
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The artist could not be found.');
+            done();
+          });
+      });
+    });
+
+    describe('DELETE /artists/:artistId', () => {
+      xit('deletes artist record by id', (done) => {
+        const artist = artists[0];
+        chai.request(server)
+          .delete(`/artists/${artist._id}`)
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(204);
+            Artist.findById(artist._id, (err, updatedArtist) => {
+              expect(updatedArtist).to.equal(null);
+              done();
+            });
+          });
+      });
+
+      xit('returns a 404 if the artist does not exist', (done) => {
+        chai.request(server)
+          .delete('/artists/12345')
+          .end((err, res) => {
+            expect(err).to.equal(null);
+            expect(res.status).to.equal(404);
+            expect(res.body.error).to.equal('The artist could not be found.');
+            done();
+          });
+      });
+    });
   });
 });
