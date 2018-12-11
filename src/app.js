@@ -21,6 +21,7 @@ app.get('/Artist/:artistId', ArtistController.get);
 app.put('/Artist/:artistId', ArtistController.put);
 app.delete('/Artist/:artistId', ArtistController.deleteArtist);
 app.post('/Artist/:artistId/album', AlbumController.postAlbum);
+app.get('/Artist/:artistId/albums', AlbumController.getAlbums);
 app.post('/Album/:albumId/song', SongController.postSong);
 
 app.listen(3000);
