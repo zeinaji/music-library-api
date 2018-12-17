@@ -125,7 +125,8 @@ describe('/artists', () => {
           .end((err, res) => {
             expect(err).to.equal(null);
             expect(res.status).to.equal(204);
-            Artist.findById(artist._id, (err, updatedArtist) => {
+            Artist.findById(artist._id, (error, updatedArtist) => {
+              expect(error).to.equal(null);
               expect(updatedArtist).to.equal(null);
               done();
             });
