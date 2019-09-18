@@ -38,7 +38,7 @@ describe('/albums', () => {
             expect(err).to.equal(null);
             expect(album.name).to.equal('InnerSpeaker');
             expect(album.year).to.equal(2010);
-            expect(album.artist).to.eql(artist._id.toString());
+            expect(album.artist).to.eql(artist._id);
             done();
           });
         });
