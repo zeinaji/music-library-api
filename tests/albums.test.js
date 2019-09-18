@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Artist = require('../src/models/artist');
 const Album = require('../src/models/album');
 
@@ -16,13 +15,15 @@ describe('/albums', () => {
   });
 
   afterEach((done) => {
-    mongoose.connection.dropDatabase(() => {
-      done();
+    Artist.deleteMany({}, () => {
+      Album.deleteMany({}, () => {
+        done();
+      });
     });
   });
 
   describe('POST /artists/:artistId/albums', () => {
-    xit('creates a new album for a given artist', (done) => {
+    it('creates a new album for a given artist', (done) => {
       chai.request(server)
         .post(`/artists/${artist._id}/albums`)
         .send({
@@ -37,13 +38,13 @@ describe('/albums', () => {
             expect(err).to.equal(null);
             expect(album.name).to.equal('InnerSpeaker');
             expect(album.year).to.equal(2010);
-            expect(album.artist).to.eql(artist._id);
+            expect(album.artist).to.eql(artist._id.toString());
             done();
           });
         });
     });
 
-    xit('returns a 404 and does not create an album if the artist does not exist', (done) => {
+    it('returns a 404 and does not create an album if the artist does not exist', (done) => {
       chai.request(server)
         .post('/artists/1234/albums')
         .send({

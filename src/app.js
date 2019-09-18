@@ -1,9 +1,21 @@
 const express = require('express');
+const artistControllers = require('./controllers/artists');
+const albumControllers = require('./controllers/albums');
 
 const app = express();
 
-app.get('*', (req, res) => {
-  res.status(200).json({ message: 'Hello World!' });
-});
+app.use(express.json());
+
+app.post('/artists', artistControllers.create);
+
+app.get('/artists', artistControllers.list);
+
+app.get('/artists/:id', artistControllers.find);
+
+app.patch('/artists/:id', artistControllers.patch);
+
+app.delete('/artists/:id', artistControllers.delete);
+
+app.post('/artists/:artistId/albums', albumControllers.create);
 
 module.exports = app;
