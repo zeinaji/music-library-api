@@ -15,8 +15,9 @@ exports.list = (req, res) => {
   Artist.find({}).then(artists => res.json(artists));
 };
 
-exports.find = (req, res) => { // this is the controller you wrote in the first part of this step
-  Artist.findOne({ _id: req.params.id }, (err, artist) => {
+exports.find = (req, res) => {
+  // this is the controller you wrote in the first part of this step
+  Artist.findOne({ _id: req.params.id }, (_, artist) => {
     if (!artist) {
       res.status(404).json({ error: 'The artist could not be found.' });
     } else {
@@ -25,13 +26,14 @@ exports.find = (req, res) => { // this is the controller you wrote in the first 
   });
 };
 
-exports.patch = (req, res) => { // this is the controller you wrote in the first part of this step
-  Artist.findOne({ _id: req.params.id }, (err, artist) => {
+exports.patch = (req, res) => {
+  // this is the controller you wrote in the first part of this step
+  Artist.findOne({ _id: req.params.id }, (_, artist) => {
     if (!artist) {
       res.status(404).json({ error: 'The artist could not be found.' });
     } else {
       artist.set(req.body);
-      artist.save().then((updatedArtist) => {
+      artist.save().then(updatedArtist => {
         res.status(200).json(updatedArtist);
       });
     }
@@ -39,7 +41,7 @@ exports.patch = (req, res) => { // this is the controller you wrote in the first
 };
 
 exports.delete = (req, res) => {
-  Artist.findOne({ _id: req.params.id }, (err, artist) => {
+  Artist.findOne({ _id: req.params.id }, (_, artist) => {
     if (!artist) {
       res.status(404).json({ error: 'The artist could not be found.' });
     } else {
