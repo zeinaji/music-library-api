@@ -1,10 +1,21 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const app = require('../src/app');
 const Artist = require('../src/models/artist');
 const Album = require('../src/models/album');
 
 describe('/albums', () => {
   let artist;
+
+  beforeAll(done => {
+    const url = `mongodb://127.0.0.1/test`;
+    mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    done();
+  });
+
   beforeEach(done => {
     Artist.create(
       {
@@ -41,7 +52,7 @@ describe('/albums', () => {
             expect(err).toBe(null);
             expect(album.name).toBe('InnerSpeaker');
             expect(album.year).toBe(2010);
-            expect(album.artist).to.eql(artist._id);
+            expect(album.artist).toEqual(artist._id);
             done();
           });
         });
@@ -60,7 +71,7 @@ describe('/albums', () => {
 
           Album.find({}, (err, albums) => {
             expect(err).toBe(null);
-            expect(albums).to.have.lengthOf(0);
+            expect(albums.length).toBe(0);
             done();
           });
         });
