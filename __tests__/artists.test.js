@@ -1,8 +1,18 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
 const app = require('../src/app');
 const Artist = require('../src/models/artist');
 
 describe('/artists', () => {
+  beforeAll(done => {
+    const url = `mongodb://127.0.0.1/test`;
+    mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    done();
+  });
+
   afterEach(done => {
     Artist.deleteMany({}, () => {
       done();
