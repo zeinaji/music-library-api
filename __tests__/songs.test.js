@@ -10,7 +10,7 @@ describe('Songs', () => {
   let albumId;
 
   beforeAll(done => {
-    const url = process.env.DATABASE_CONN;
+    const url = `${process.env.DATABASE_CONN}/song-test`;
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -19,28 +19,13 @@ describe('Songs', () => {
   });
 
   beforeEach(done => {
-    request(app)
-      .post('/artists')
-      .send({
-        name: 'Tame Impala',
-        genre: 'Rock',
-      })
-      .then(res => {
-        expect(res.status).toBe(200);
-        artistId = res.body._id;
-        request(app)
-          .post(`/artists/${artistId}/album`)
-          .send({
-            name: 'InnerSpeaker',
-            year: 2010,
-          })
-          .then((postAlbumError, postAlbumResponse) => {
-            expect(postAlbumError).toBe(null);
-            expect(postAlbumResponse.status).toBe(200);
-            albumId = postAlbumResponse.body._id;
-            done();
-          });
+    Artist.create({ name: 'Tame Impala', genre: 'Rock' }, (_, artist) => {
+      artistId = artist._id.toString();
+      Album.create({ name: 'InnerSpeaker', year: 2010, artist: artistId }, (__, album) => {
+        albumId = album._id.toString();
+        done();
       });
+    });
   });
 
   afterEach(done => {
@@ -69,7 +54,7 @@ describe('Songs', () => {
         .then(res => {
           expect(res.status).toBe(200);
           const songId = res.body._id;
-          expect(res.body).to.deep.equal({
+          expect(res.body).toEqual({
             name: 'Solitude Is Bliss',
             _id: songId,
             artist: {

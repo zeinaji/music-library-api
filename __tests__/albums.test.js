@@ -38,6 +38,7 @@ describe('/albums', () => {
   });
 
   afterAll(done => {
+    mongoose.connection.db.dropDatabase();
     mongoose.connection.close();
     done();
   });
