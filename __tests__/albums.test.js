@@ -40,7 +40,6 @@ describe('/albums', () => {
   afterAll(done => {
     mongoose.connection.close();
     done();
-    done();
   });
 
   describe('POST /artists/:artistId/albums', () => {
