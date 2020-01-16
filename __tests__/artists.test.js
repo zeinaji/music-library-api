@@ -52,12 +52,12 @@ describe('/artists', () => {
     });
 
     describe('GET /artists', () => {
-      xit('gets all artist records', done => {
+      it('gets all artist records', done => {
         request(app)
           .get('/artists')
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(200);
-            expect(res.body).to.have.lengthOf(3);
+            expect(res.body.length).toBe(3);
 
             res.body.forEach(artist => {
               const expected = artists.find(a => a._id.toString() === artist._id);
@@ -70,11 +70,11 @@ describe('/artists', () => {
     });
 
     describe('GET /artist/:artistId', () => {
-      xit('gets artist record by id', done => {
+      it('gets artist record by id', done => {
         const artist = artists[0];
         request(app)
           .get(`/artists/${artist._id}`)
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(200);
             expect(res.body.name).toBe(artist.name);
             expect(res.body.genre).toBe(artist.genre);
@@ -82,10 +82,10 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .get('/artists/12345')
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(404);
             expect(res.body.error).toBe('The artist could not be found.');
             done();
@@ -94,28 +94,28 @@ describe('/artists', () => {
     });
 
     describe('PATCH /artists/:artistId', () => {
-      xit('updates artist record by id', done => {
+      it('updates artist record by id', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
           .send({ genre: 'Psychedelic Rock' })
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(200);
-            Artist.findById(artist._id, updatedArtist => {
+            Artist.findById(artist._id, (_, updatedArtist) => {
               expect(updatedArtist.genre).toBe('Psychedelic Rock');
               done();
             });
           });
       });
 
-      xit('updates artist record by name', done => {
+      it('updates artist record by name', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
           .send({ name: 'Lady Gaga' })
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(200);
-            Artist.findById(artist._id, updatedArtist => {
+            Artist.findById(artist._id, (_, updatedArtist) => {
               expect(updatedArtist.name).toBe('Lady Gaga');
               expect(updatedArtist.genre).toBe('Rock');
               done();
@@ -123,11 +123,11 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .patch('/artists/12345')
           .send({ genre: 'Psychedelic Rock' })
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(404);
             expect(res.body.error).toBe('The artist could not be found.');
             done();
@@ -136,11 +136,11 @@ describe('/artists', () => {
     });
 
     describe('DELETE /artists/:artistId', () => {
-      xit('deletes artist record by id', done => {
+      it('deletes artist record by id', done => {
         const artist = artists[0];
         request(app)
           .delete(`/artists/${artist._id}`)
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(204);
             Artist.findById(artist._id, (error, updatedArtist) => {
               expect(error).toBe(null);
@@ -150,10 +150,10 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .delete('/artists/12345')
-          .end(res => {
+          .then(res => {
             expect(res.status).toBe(404);
             expect(res.body.error).toBe('The artist could not be found.');
             done();
