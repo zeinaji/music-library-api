@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const app = require('./src/app');
 
-mongoose.connect(process.env.DATABASE_CONN, { useNewUrlParser: true }, () => {
+mongoose.connect('mongodb://0.0.0.0:27017/test', { useNewUrlParser: true }, () => {
   app.listen(3000, () => {
     console.log('App listening on port 3000');
   });

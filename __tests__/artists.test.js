@@ -5,7 +5,7 @@ const Artist = require('../src/models/artist');
 
 describe('/artists', () => {
   beforeAll(done => {
-    const url = `mongodb://127.0.0.1/test`;
+    const url = 'mongodb://0.0.0.0:27017/test';
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -29,8 +29,7 @@ describe('/artists', () => {
         })
         .then(res => {
           expect(res.status).toBe(201);
-
-          Artist.findById(res.body._id, artist => {
+          Artist.findById(res.body._id, (_, artist) => {
             expect(artist.name).toBe('Tame Impala');
             expect(artist.genre).toBe('Rock');
             done();
@@ -53,7 +52,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artists', () => {
-      it('gets all artist records', done => {
+      xit('gets all artist records', done => {
         request(app)
           .get('/artists')
           .end(res => {
@@ -71,7 +70,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artist/:artistId', () => {
-      it('gets artist record by id', done => {
+      xit('gets artist record by id', done => {
         const artist = artists[0];
         request(app)
           .get(`/artists/${artist._id}`)
@@ -83,7 +82,7 @@ describe('/artists', () => {
           });
       });
 
-      it('returns a 404 if the artist does not exist', done => {
+      xit('returns a 404 if the artist does not exist', done => {
         request(app)
           .get('/artists/12345')
           .end(res => {
@@ -95,7 +94,7 @@ describe('/artists', () => {
     });
 
     describe('PATCH /artists/:artistId', () => {
-      it('updates artist record by id', done => {
+      xit('updates artist record by id', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
@@ -109,7 +108,7 @@ describe('/artists', () => {
           });
       });
 
-      it('updates artist record by name', done => {
+      xit('updates artist record by name', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
@@ -124,7 +123,7 @@ describe('/artists', () => {
           });
       });
 
-      it('returns a 404 if the artist does not exist', done => {
+      xit('returns a 404 if the artist does not exist', done => {
         request(app)
           .patch('/artists/12345')
           .send({ genre: 'Psychedelic Rock' })
@@ -137,7 +136,7 @@ describe('/artists', () => {
     });
 
     describe('DELETE /artists/:artistId', () => {
-      it('deletes artist record by id', done => {
+      xit('deletes artist record by id', done => {
         const artist = artists[0];
         request(app)
           .delete(`/artists/${artist._id}`)
@@ -151,7 +150,7 @@ describe('/artists', () => {
           });
       });
 
-      it('returns a 404 if the artist does not exist', done => {
+      xit('returns a 404 if the artist does not exist', done => {
         request(app)
           .delete('/artists/12345')
           .end(res => {
