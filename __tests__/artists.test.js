@@ -5,7 +5,7 @@ const Artist = require('../src/models/artist');
 
 describe('/artists', () => {
   beforeAll(done => {
-    const url = process.env.DATABASE_CONN;
+    const url = `${process.env.DATABASE_CONN}/artist-test`;
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
