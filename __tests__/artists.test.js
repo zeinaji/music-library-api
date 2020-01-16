@@ -4,10 +4,9 @@ const app = require('../src/app');
 const Artist = require('../src/models/artist');
 
 describe('/artists', () => {
-  let db;
   beforeAll(done => {
     const url = process.env.DATABASE_CONN;
-    db = mongoose.connect(url, {
+    mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -21,7 +20,7 @@ describe('/artists', () => {
   });
 
   afterAll(done => {
-    db.close();
+    mongoose.connection.close();
     done();
   });
 
