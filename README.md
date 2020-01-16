@@ -8,4 +8,4 @@ This repository contains the integration test suite for Music Library API challe
 - `npm install`
 
 ### Running the Tests
-- `npm test` uses [Mocha](https://mochajs.org) to run e2e tests defined in `tests` directory
+- `npm test` uses [Jest](https://jestjs.io/) and [Supertest](https://www.npmjs.com/package/supertest) to run e2e tests defined in `__tests__` directory
