@@ -6,10 +6,11 @@ const Album = require('../src/models/album');
 
 describe('/albums', () => {
   let artist;
+  let db;
 
   beforeAll(done => {
-    const url = `mongodb://127.0.0.1/test`;
-    mongoose.connect(url, {
+    const url = process.env.DATABASE_CONN;
+    db = mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -22,7 +23,7 @@ describe('/albums', () => {
         name: 'Tame Impala',
         genre: 'Rock',
       },
-      document => {
+      (_, document) => {
         artist = document;
         done();
       },
@@ -37,8 +38,13 @@ describe('/albums', () => {
     });
   });
 
+  afterAll(done => {
+    db.close();
+    done();
+  });
+
   describe('POST /artists/:artistId/albums', () => {
-    xit('creates a new album for a given artist', done => {
+    it('creates a new album for a given artist', done => {
       request(app)
         .post(`/artists/${artist._id}/albums`)
         .send({
@@ -58,7 +64,7 @@ describe('/albums', () => {
         });
     });
 
-    xit('returns a 404 and does not create an album if the artist does not exist', done => {
+    it('returns a 404 and does not create an album if the artist does not exist', done => {
       request(app)
         .post('/artists/1234/albums')
         .send({
