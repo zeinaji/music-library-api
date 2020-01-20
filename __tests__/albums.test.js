@@ -8,7 +8,7 @@ describe('/albums', () => {
   let artist;
 
   beforeAll(done => {
-    const url = `${process.env.DATABASE_CONN}/album-test`;
+    const url = process.env.DATABASE_CONN;
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
