@@ -10,7 +10,7 @@ describe('Songs', () => {
   let albumId;
 
   beforeAll(done => {
-    const url = `${process.env.DATABASE_CONN}/song-test`;
+    const url = process.env.DATABASE_CONN;
     mongoose.connect(url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
