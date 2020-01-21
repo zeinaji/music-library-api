@@ -18,4 +18,12 @@ DATABASE_CONN=mongodb://localhost:27017/music-api-test >> .env.test
 
 - `npm test` uses [Jest](https://jestjs.io/) and [Supertest](https://www.npmjs.com/package/supertest) to run e2e tests defined in `__tests__` directory
 
+### Running the API
 
+Create a new file in the project root called `.env` and add your `DATABASE_CONN`. You can do this with a single command from within the project directory.
+
+```
+DATABASE_CONN=mongodb://localhost:27017/music-api >> .env
+```
+
+You can then fire up the API with `npm start`.
