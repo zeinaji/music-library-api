@@ -113,21 +113,6 @@ describe('/artists', () => {
           });
       });
 
-      xit('updates artist name by id', done => {
-        const artist = artists[0];
-        request(app)
-          .patch(`/artists/${artist._id}`)
-          .send({ name: 'Lady Gaga' })
-          .then(res => {
-            expect(res.status).toBe(200);
-            Artist.findById(artist._id, (_, updatedArtist) => {
-              expect(updatedArtist.name).toBe('Lady Gaga');
-              expect(updatedArtist.genre).toBe('Rock');
-              done();
-            });
-          });
-      });
-
       xit('returns a 404 if the artist does not exist', done => {
         request(app)
           .patch('/artists/12345')
