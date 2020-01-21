@@ -25,7 +25,7 @@ describe('/artists', () => {
   });
 
   describe('POST /artists', () => {
-    xit('creates a new artist in the database', done => {
+    it('creates a new artist in the database', done => {
       request(app)
         .post('/artists')
         .send({
@@ -57,7 +57,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artists', () => {
-      xit('gets all artist records', done => {
+      it('gets all artist records', done => {
         request(app)
           .get('/artists')
           .then(res => {
@@ -75,7 +75,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artist/:artistId', () => {
-      xit('gets artist record by id', done => {
+      it('gets artist record by id', done => {
         const artist = artists[0];
         request(app)
           .get(`/artists/${artist._id}`)
@@ -99,7 +99,7 @@ describe('/artists', () => {
     });
 
     describe('PATCH /artists/:artistId', () => {
-      xit('updates artist record by id', done => {
+      xit('updates artist genre by id', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
@@ -113,7 +113,7 @@ describe('/artists', () => {
           });
       });
 
-      xit('updates artist record by name', done => {
+      xit('updates artist name by id', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
