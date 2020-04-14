@@ -20,12 +20,13 @@ describe('/artists', () => {
   });
 
   afterAll(done => {
+    mongoose.connection.db.dropDatabase();
     mongoose.connection.close();
     done();
   });
 
   describe('POST /artists', () => {
-    xit('creates a new artist in the database', done => {
+    it('creates a new artist in the database', done => {
       request(app)
         .post('/artists')
         .send({
@@ -35,7 +36,7 @@ describe('/artists', () => {
         .then(res => {
           expect(res.status).toBe(201);
           Artist.findById(res.body._id, (_, artist) => {
-            expect(artist.name).toBe('Tame Impala');
+            expect(artist.name).toEqual('Tame Impala');
             expect(artist.genre).toBe('Rock');
             done();
           });
@@ -57,7 +58,7 @@ describe('/artists', () => {
     });
 
     describe('GET /artists', () => {
-      xit('gets all artist records', done => {
+      it('gets all artist records', done => {
         request(app)
           .get('/artists')
           .then(res => {
@@ -74,8 +75,8 @@ describe('/artists', () => {
       });
     });
 
-    describe('GET /artist/:artistId', () => {
-      xit('gets artist record by id', done => {
+    describe('GET /artists/:artistId', () => {
+      it('gets artist record by id', done => {
         const artist = artists[0];
         request(app)
           .get(`/artists/${artist._id}`)
@@ -87,7 +88,7 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .get('/artists/12345')
           .then(res => {
@@ -99,7 +100,7 @@ describe('/artists', () => {
     });
 
     describe('PATCH /artists/:artistId', () => {
-      xit('updates artist genre by id', done => {
+      it('updates artist genre by id', done => {
         const artist = artists[0];
         request(app)
           .patch(`/artists/${artist._id}`)
@@ -113,7 +114,22 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('updates artist name by id', done => {
+        const artist1 = artists[1];
+        request(app)
+          .patch(`/artists/${artist1._id}`)
+          .send({ name: 'Bombay Bicycle Club' })
+          .then(res => {
+            expect(res.status).toBe(200);
+            Artist.findById(artist1._id, (_, updatedArtist) => {
+              expect(updatedArtist.name).toBe('Bombay Bicycle Club');
+              expect(updatedArtist.genre).toBe('Pop');
+              done();
+            });
+          });
+      });
+
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .patch('/artists/12345')
           .send({ genre: 'Psychedelic Rock' })
@@ -126,7 +142,7 @@ describe('/artists', () => {
     });
 
     describe('DELETE /artists/:artistId', () => {
-      xit('deletes artist record by id', done => {
+      it('deletes artist record by id', done => {
         const artist = artists[0];
         request(app)
           .delete(`/artists/${artist._id}`)
@@ -140,7 +156,7 @@ describe('/artists', () => {
           });
       });
 
-      xit('returns a 404 if the artist does not exist', done => {
+      it('returns a 404 if the artist does not exist', done => {
         request(app)
           .delete('/artists/12345')
           .then(res => {
