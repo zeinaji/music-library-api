@@ -23,6 +23,8 @@ describe('Songs', () => {
       artistId = artist._id.toString();
       Album.create({ name: 'InnerSpeaker', year: 2010, artist: artistId }, (__, album) => {
         albumId = album._id.toString();
+        artist.albums.push(album);
+        artist.save();
         done();
       });
     });
@@ -44,7 +46,7 @@ describe('Songs', () => {
   });
 
   describe('POST /album/:albumId/song', () => {
-    xit('creates a new song under an album', done => {
+    it('creates a new song under an album', done => {
       request(app)
         .post(`/album/${albumId}/song`)
         .send({
@@ -61,14 +63,17 @@ describe('Songs', () => {
               _id: artistId,
               name: 'Tame Impala',
               genre: 'Rock',
-              __v: 0,
+              albums: [albumId],
+              songs: [songId],
+              __v: 2,
             },
             album: {
               _id: albumId,
               artist: artistId,
               name: 'InnerSpeaker',
               year: 2010,
-              __v: 0,
+              songs: [songId],
+              __v: 1,
             },
             __v: 0,
           });
